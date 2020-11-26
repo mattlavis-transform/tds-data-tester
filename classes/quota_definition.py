@@ -1,11 +1,15 @@
 import csv
 from classes.master import Master
 from classes.quota_balance_event import QuotaBalanceEvent
+from classes.quota_blocking_period import QuotaBlockingPeriod
+from classes.quota_suspension_period import QuotaSuspensionPeriod
 
 
 class QuotaDefinition(Master):
 
     quota_balance_events = []
+    quota_blocking_periods = []
+    quota_suspension_periods = []
 
     def __init__(self, elem):
         Master.__init__(self, elem)
@@ -27,6 +31,14 @@ class QuotaDefinition(Master):
         # Get balance events
         for el in elem.findall('.//quotaBalanceEvent'):
             self.quota_balance_events.append(QuotaBalanceEvent(el, self.quota_definition_sid))
+
+        # Get blocking periods
+        for el in elem.findall('.//quotaBlockingPeriod'):
+            self.quota_blocking_periods.append(QuotaBlockingPeriod(el, self.quota_definition_sid))
+
+        # Get suspension periods
+        for el in elem.findall('.//quotaSuspensionPeriod'):
+            self.quota_suspension_periods.append(QuotaSuspensionPeriod(el, self.quota_definition_sid))
 
     def __str__(self) -> str:
         return ""

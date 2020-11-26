@@ -113,6 +113,8 @@ class Document(object):
         # Quota definitions
         self.write(self.quota_definitions, "quota_definitions.csv")
         self.write(QuotaDefinition.quota_balance_events, "quota_balance_events.csv")
+        self.write(QuotaDefinition.quota_blocking_periods, "quota_blocking_periods.csv")
+        self.write(QuotaDefinition.quota_suspension_periods, "quota_suspension_periods.csv")
 
     def write(self, obj, filename):
         path = os.path.join(self.subfolder, filename)

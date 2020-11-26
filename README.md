@@ -43,5 +43,12 @@ These files can then be viewed in a viewer of your choice. Recommend **VSCode** 
   - quota order numbers
   - quota definitions
   - quota balances
+  - quota suspension periods
+  - quota blocking periods
 
 - More will be delivered in good time ...
+
+- There is no data available for:
+  
+  - geographical areas and memberships (quite urgent)
+  - modification regulations

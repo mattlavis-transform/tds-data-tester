@@ -46,7 +46,8 @@ These files can then be viewed in a viewer of your choice. Recommend **VSCode** 
   - quota suspension periods
   - quota blocking periods
 
-- More will be delivered in good time ...
+- More will be delivered in good time ... next priority
+  - quota-related events
 
 - There is no data available for:
   

@@ -101,6 +101,7 @@ class Document(object):
 
         # Goods nomenclatures
         self.write(self.goods_nomenclatures, "goods_nomenclatures.csv")
+        self.write(GoodsNomenclature.footnote_association_goods_nomenclatures, "footnote_association_goods_nomenclatures.csv")
         self.write(GoodsNomenclature.goods_nomenclature_description_periods, "goods_nomenclature_description_periods.csv")
         self.write(GoodsNomenclature.goods_nomenclature_indents, "goods_nomenclature_indents.csv")
         self.write(GoodsNomenclatureDescriptionPeriod.goods_nomenclature_descriptions, "goods_nomenclature_descriptions.csv")

@@ -1,6 +1,8 @@
+from classes.measure_excluded_geographical_area import MeasureExcludedGeographicalArea
 from classes.measure_component import MeasureComponent
 from classes.measure_condition import MeasureCondition
 from classes.footnote_association_measure import FootnoteAssociationMeasure
+from classes.measure_excluded_geographical_area import MeasureExcludedGeographicalArea
 from classes.master import Master
 import csv
 
@@ -9,6 +11,7 @@ class Measure(Master):
     measure_components = []
     measure_conditions = []
     footnote_association_measures = []
+    measure_excluded_geographical_areas = []
 
     def __init__(self, elem=None):
         if elem is not None:
@@ -33,14 +36,17 @@ class Measure(Master):
             self.reduction_indicator = Master.process_null(elem.find("reductionIndicator"))
             self.export_refund_nomenclature_sid = None
 
-            for elem in elem.findall('.//measureComponent'):
-                self.measure_components.append(MeasureComponent(elem, self.measure_sid))
+            for el in elem.findall('.//measureComponent'):
+                self.measure_components.append(MeasureComponent(el, self.measure_sid))
 
-            for elem in elem.findall('.//measureCondition'):
-                self.measure_conditions.append(MeasureCondition(elem, self.measure_sid))
+            for el in elem.findall('.//measureCondition'):
+                self.measure_conditions.append(MeasureCondition(el, self.measure_sid))
 
-            for elem in elem.findall('.//footnoteAssociationMeasure'):
-                self.footnote_association_measures.append(FootnoteAssociationMeasure(elem, self.measure_sid))
+            for el in elem.findall('.//footnoteAssociationMeasure'):
+                self.footnote_association_measures.append(FootnoteAssociationMeasure(el, self.measure_sid))
+
+            for el in elem.findall('.//measureExcludedGeographicalArea'):
+                self.measure_excluded_geographical_areas.append(MeasureExcludedGeographicalArea(el, self.measure_sid))
 
     def __str__(self) -> str:
         return ""

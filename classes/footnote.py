@@ -16,6 +16,5 @@ class Footnote(Master):
         for elem in elem.findall('.//footnoteDescriptionPeriod'):
             self.footnote_description_periods.append(FootnoteDescriptionPeriod(elem, self.footnote_type_id, self.footnote_id))
 
-
     def __str__(self) -> str:
         return ""

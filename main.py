@@ -9,8 +9,8 @@ def main():
     files = os.listdir(folder)
     files.sort()
     for filename in files:
-        if "20201111T000000" in filename:
-        # if "2020" in filename:
+        # if "20201111T000000" in filename:
+        if "2020" in filename:
             if filename.endswith(".xml"):
                 document = Document(filename)
                 document.parse()

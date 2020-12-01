@@ -114,4 +114,8 @@ temp/
 .DS_Store
 xml/
 csv/
+db_data/
 instructions.md
+
+# Database
+database.ini

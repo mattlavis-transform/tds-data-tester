@@ -1,6 +1,10 @@
+from config import config
 from classes.goods_nomenclature import GoodsNomenclature
 from classes.additional_code import AdditionalCode
 import csv, os
+import psycopg2
+import glob
+import datetime
 import xml.etree.ElementTree as ET
 
 from classes.measure_component import MeasureComponent
@@ -18,6 +22,7 @@ from classes.goods_nomenclature_description_period import GoodsNomenclatureDescr
 from classes.quota_order_number import QuotaOrderNumber
 from classes.quota_order_number_origin import QuotaOrderNumberOrigin
 from classes.quota_definition import QuotaDefinition
+
 
 
 class Document(object):
@@ -126,8 +131,8 @@ class Document(object):
                 for item in obj:
                     w.writerow({k: getattr(item, k) for k in vars(item)})
 
-    def make_folders(self):
-        csv_path = os.path.join(self.root, "csv")
+    def make_folders(self, folder_name='csv'):
+        csv_path = os.path.join(self.root, folder_name)
         if not(os.path.isdir(csv_path)):
             os.mkdir(csv_path)
         self.subfolder = os.path.join(csv_path, self.date)
@@ -141,3 +146,72 @@ class Document(object):
         path = os.path.join(self.root, "xml")
         path = os.path.join(path, file)
         return path
+
+    def generate_diff_report(self, date_as_string):
+        """ Connect to the PostgreSQL database server """
+        conn = None
+        try:
+            # read connection parameters
+            params = config()
+
+            # connect to the PostgreSQL server
+            print('Connecting to the PostgreSQL database...')
+            conn = psycopg2.connect(**params)
+        
+            # create a cursor
+            cur = conn.cursor()
+            
+            # analyze the files
+            self.export_db_data_to_csv(cur, 'csv', date_as_string)
+          
+            # close the communication with the PostgreSQL
+            cur.close()
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+        finally:
+            if conn is not None:
+                conn.close()
+                print('Database connection closed.')
+
+    def export_db_data_to_csv(self, cur, folder, subfolder):
+        csvs_path = os.path.join(self.root, folder, subfolder, "*.csv")
+        self.make_folders('db_data')
+        db_data_path = os.path.join(self.root, "db_data", subfolder)
+        print("Analyzing files:")
+
+        for fname in glob.glob(csvs_path):
+            basename = os.path.basename(fname)
+            print(f" - {basename}...")
+            with open(fname) as f:
+                file_lines = f.readlines()
+                if file_lines:
+                    fields = file_lines[0]
+                    table_name = f"{basename[:-4]}_oplog"
+                    f = open(f"{db_data_path}/{basename}", "w")
+                    if fields:
+                        f.write(fields)
+                        try:
+                            # BitZesty had made it easy for us to detect which record comes from which file by attaching the filename field to every table
+                            cur.execute(f"SELECT {fields} from {table_name} where filename LIKE '%{subfolder}%'")
+                            data = cur.fetchall()
+                            for row in data:
+                              data_line = ""
+                              for x in row:
+                                  if isinstance(x, datetime.datetime):
+                                      x = x.strftime('%Y-%m-%dT%H:%M:%S')
+                                  elif x is None:
+                                      x = ''
+                                  elif x == True:
+                                      x = '1'
+                                  elif x == False:
+                                      x = '0'
+                                  data_line+=str(x) + ','
+                              f.write(data_line[:-1]+"\n")
+                        except (Exception, psycopg2.DatabaseError) as error:
+                            f.write(str(error)+"\n")
+                            f.close()
+                            cur.execute("rollback")
+                        finally:
+                            f.close()
+
+                    

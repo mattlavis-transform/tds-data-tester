@@ -2,7 +2,7 @@ class Master(object):
     def __init__(self, elem):
 
         self.operation = elem.find("metainfo/opType").text
-        self.national = 1 if elem.find("metainfo/origin").text == "N" else 0
+        # self.national = 1 if elem.find("metainfo/origin").text == "N" else 0
         # self.hjid = elem.find("hjid").text
         # self.operation_date = "2021-01-01"
         # self.status = elem.find("metainfo/status").text

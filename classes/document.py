@@ -213,4 +213,5 @@ class Document(object):
                             cur.execute("rollback")
                         finally:
                             f.close()
+
                     

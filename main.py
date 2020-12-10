@@ -14,7 +14,7 @@ def main():
             if filename.endswith(".xml"):
                 document = Document(filename)
                 document.parse()
-                document.generate_diff_report('20201111')
+                document.generate_diff_report(filename[7:15])
 
 if __name__ == '__main__':
     # execute only if run as the entry point into the program
